@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Rock Party Bingo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600;800&family=Rock+Salt&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Kanit', sans-serif;
+            overflow: hidden; /* Prevent scrolling on projector screen */
+        }
+
+        /* Neon & Glow Effects */
+        .neon-text {
+            text-shadow: 0 0 10px rgba(255, 0, 128, 0.7), 0 0 20px rgba(255, 0, 128, 0.5);
+        }
+        
+        .stage-box {
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            border: 2px solid #333;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .stage-box::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #ff0080, #00ffff, #ff0080);
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0.5;
+        }
+
+        /* History Cards */
+        .history-card {
+            background: #111;
+            border-left: 3px solid #333;
+            transition: all 0.3s;
+        }
+        .history-card.latest {
+            border-left-color: #00ffff;
+            background: #1a1a1a;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        /* Button Animations */
+        .btn-rock:active {
+            transform: scale(0.95);
+        }
+        
+        .glitch-effect {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+            color: #00ffff;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        .animate-pop {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <!-- Top Bar: Status & Connection -->
+    <header class="h-16 border-b border-gray-800 bg-black/80 flex items-center justify-between px-6 z-20">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-compact-disc text-pink-500 text-2xl animate-spin-slow"></i>
+            <h1 class="font-bold text-xl tracking-wider text-gray-200">ADMIN CONSOLE <span class="text-xs font-normal text-gray-500 ml-2">v 2.1 (Party Edition)</span></h1>
+        </div>
+        <div class="flex items-center gap-4 text-sm">
+            <div class="flex items-center gap-2 text-green-400">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span>SYSTEM ONLINE</span>
+            </div>
+            <div class="text-gray-500">REMAINING: <span id="remainingCount" class="text-white font-mono">24</span></div>
+        </div>
+    </header>
+
+    <div class="flex-grow flex p-4 gap-4 h-[calc(100vh-4rem)]">
+        
+        <!-- Left Panel: The Stage (Projector View) -->
+        <main class="flex-grow-[2] flex flex-col gap-4">
+            
+            <!-- Main Display Box -->
+            <div class="stage-box flex-grow rounded-3xl flex flex-col items-center justify-center relative overflow-hidden group">
+                
+                <!-- Background ambient visuals -->
+                <div class="absolute inset-0 opacity-20 pointer-events-none">
+                    <i class="fa-solid fa-bolt absolute top-10 right-10 text-9xl text-yellow-500"></i>
+                    <i class="fa-solid fa-music absolute bottom-10 left-10 text-9xl text-pink-500"></i>
+                </div>
+
+                <!-- Content Wrapper -->
+                <div id="displayArea" class="text-center z-10 p-10">
+                    <!-- Default State -->
+                    <div id="waitingState" class="animate-pulse">
+                        <h2 class="text-6xl text-gray-700 font-black uppercase italic tracking-widest">Waiting for<br>Next Beat...</h2>
+                    </div>
+
+                    <!-- Active Word State (Hidden initially) -->
+                    <div id="activeState" class="hidden">
+                        <div class="mb-8">
+                            <i id="currentIcon" class="fa-solid fa-guitar text-8xl md:text-9xl text-cyan-400 drop-shadow-[0_0_15px_rgba(0,255,255,0.6)]"></i>
+                        </div>
+                        <h1 id="currentWord" class="text-6xl md:text-8xl font-black text-white uppercase leading-tight neon-text">
+                            BODY SLAM
+                        </h1>
+                        <p class="mt-4 text-pink-500 text-xl md:text-2xl font-light tracking-[0.5em] uppercase border-t border-gray-800 pt-4 inline-block">
+                            Current Track
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Control Deck -->
+            <div class="h-24 bg-gray-900 rounded-2xl border border-gray-800 p-3 flex items-center justify-center gap-6 shadow-2xl">
+                <button onclick="resetGame()" class="px-6 py-3 rounded-xl border border-gray-700 text-gray-400 hover:text-white hover:border-white transition uppercase text-xs font-bold tracking-widest">
+                    <i class="fa-solid fa-power-off mr-2"></i> Reset Setlist
+                </button>
+                
+                <button id="drawBtn" onclick="drawNextWord()" class="btn-rock group relative px-12 py-4 bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 rounded-xl text-white font-black text-xl uppercase tracking-wider shadow-lg overflow-hidden transition-all hover:shadow-pink-500/50">
+                    <span class="relative z-10 flex items-center gap-3">
+                        <i class="fa-solid fa-play"></i> NEXT BEAT
+                    </span>
+                    <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                </button>
+            </div>
+
+        </main>
+
+        <!-- Right Panel: Setlist History -->
+        <aside class="w-80 md:w-96 bg-gray-900/50 rounded-2xl border border-gray-800 flex flex-col overflow-hidden backdrop-blur-md">
+            <div class="p-4 border-b border-gray-800 bg-gray-900">
+                <h3 class="text-gray-400 font-bold text-sm uppercase flex justify-between items-center">
+                    <span><i class="fa-solid fa-list-ol mr-2"></i> Setlist History</span>
+                    <span id="historyCount" class="bg-gray-800 px-2 py-0.5 rounded text-xs">0</span>
+                </h3>
+            </div>
+            
+            <div id="historyList" class="flex-1 overflow-y-auto p-2 space-y-2 scrollbar-hide">
+                <!-- History Items will be injected here -->
+                <div class="text-center text-gray-600 py-10 italic text-sm">
+                    No tracks played yet.
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        // --- DATA ---
+        // New Rock / Concert / Party Theme Vocabulary
+        const fullWordPool = [
+            { text: "Air Guitar", icon: "fa-guitar" }, // โซโล่ทิพย์
+            { text: "โยกหัว (Headbang)", icon: "fa-music" },
+            { text: "ว้าก!!! (Scream)", icon: "fa-bullhorn" },
+            { text: "รัวกลอง (Drum Roll)", icon: "fa-drum" },
+            { text: "กระโดด! (Jump)", icon: "fa-person-falling" },
+            { text: "ชูมือขวา 🤘", icon: "fa-hand-horns" },
+            { text: "เสื้อดำ (All Black)", icon: "fa-user-secret" },
+            { text: "ใส่แว่นดำ", icon: "fa-glasses" },
+            { text: "เปิดแฟลชมือถือ", icon: "fa-mobile-screen" },
+            { text: "เอาอีกๆ (Encore)", icon: "fa-rotate-right" },
+            { text: "เสื้อวง (Band Tee)", icon: "fa-shirt" },
+            { text: "ร้องเพี้ยน", icon: "fa-face-dizzy" },
+            { text: "ลืมเนื้อร้อง", icon: "fa-question" },
+            { text: "เดินเบส (Bass Line)", icon: "fa-wave-square" },
+            { text: "ไมค์หอน (Feedback)", icon: "fa-microphone-slash" },
+            { text: "ขอลายเซ็น", icon: "fa-pen-nib" },
+            { text: "โชว์รอยสัก", icon: "fa-dragon" },
+            { text: "คนผมยาว", icon: "fa-user" },
+            { text: "ควงไม้กลอง", icon: "fa-drumstick-bite" }, // ใช้ icon ใกล้เคียง
+            { text: "นักร้องนำ", icon: "fa-microphone" },
+            { text: "โซโล่เบส", icon: "fa-bolt" },
+            { text: "คอแห้ง (Thirsty)", icon: "fa-glass-water" },
+            { text: "ถ่ายคลิป", icon: "fa-video" },
+            { text: "เซลฟี่หน้าเวที", icon: "fa-camera" }
+        ];
+
+        let availableWords = [...fullWordPool];
+        let calledWords = [];
+        let isSpinning = false;
+
+        // --- DOM ELEMENTS ---
+        const displayArea = document.getElementById('displayArea');
+        const waitingState = document.getElementById('waitingState');
+        const activeState = document.getElementById('activeState');
+        const currentIcon = document.getElementById('currentIcon');
+        const currentWord = document.getElementById('currentWord');
+        const historyList = document.getElementById('historyList');
+        const remainingCount = document.getElementById('remainingCount');
+        const historyCount = document.getElementById('historyCount');
+        const drawBtn = document.getElementById('drawBtn');
+
+        // --- FUNCTIONS ---
+
+        function updateStats() {
+            remainingCount.innerText = availableWords.length;
+            historyCount.innerText = calledWords.length;
+        }
+
+        function drawNextWord() {
+            if (availableWords.length === 0) {
+                alert("All tracks played! Game Over.");
+                return;
+            }
+            if (isSpinning) return;
+
+            isSpinning = true;
+            drawBtn.disabled = true;
+            drawBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // 1. Shuffle UI Effect (Glitch/Spin)
+            waitingState.classList.add('hidden');
+            activeState.classList.remove('hidden');
+            
+            let counter = 0;
+            const shuffleInterval = setInterval(() => {
+                const randomTemp = availableWords[Math.floor(Math.random() * availableWords.length)];
+                currentWord.innerText = randomTemp.text;
+                currentWord.classList.add('glitch-effect');
+                currentIcon.className = `fa-solid ${randomTemp.icon} text-8xl md:text-9xl text-gray-600`;
+                
+                counter++;
+                if (counter > 15) { // Stop after ~1.5 seconds
+                    clearInterval(shuffleInterval);
+                    finalizeWord();
+                }
+            }, 80);
+        }
+
+        function finalizeWord() {
+            // Pick logic
+            const randomIndex = Math.floor(Math.random() * availableWords.length);
+            const picked = availableWords[randomIndex];
+            
+            // Move from available to called
+            availableWords.splice(randomIndex, 1);
+            calledWords.unshift(picked); // Add to front of history
+
+            // Update UI - Final Reveal
+            currentWord.classList.remove('glitch-effect');
+            currentWord.classList.add('animate-pop'); // Pop animation
+            
+            // Reset animation class for next time
+            setTimeout(() => currentWord.classList.remove('animate-pop'), 600);
+
+            currentWord.innerText = picked.text;
+            currentIcon.className = `fa-solid ${picked.icon} text-8xl md:text-9xl text-cyan-400 drop-shadow-[0_0_15px_rgba(0,255,255,0.6)] animate-pop`;
+
+            updateStats();
+            updateHistoryUI();
+            
+            isSpinning = false;
+            drawBtn.disabled = false;
+            drawBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function updateHistoryUI() {
+            historyList.innerHTML = '';
+            
+            calledWords.forEach((item, index) => {
+                const isLatest = index === 0;
+                const card = document.createElement('div');
+                card.className = `history-card p-3 rounded mb-2 flex items-center justify-between ${isLatest ? 'latest' : ''}`;
+                
+                const numberBadge = `<span class="text-xs text-gray-600 mr-2 font-mono">#${calledWords.length - index}</span>`;
+                
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-cyan-500">
+                            <i class="fa-solid ${item.icon} text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-gray-200">${item.text}</div>
+                            ${isLatest ? '<span class="text-[10px] text-pink-500 uppercase tracking-wider font-bold">Now Playing</span>' : ''}
+                        </div>
+                    </div>
+                    ${numberBadge}
+                `;
+                historyList.appendChild(card);
+            });
+        }
+
+        function resetGame() {
+            if (confirm("Reset Setlist? This will clear all history.")) {
+                availableWords = [...fullWordPool];
+                calledWords = [];
+                updateStats();
+                updateHistoryUI();
+                
+                activeState.classList.add('hidden');
+                waitingState.classList.remove('hidden');
+            }
+        }
+
+        // Init
+        updateStats();
+
+    </script>
+</body>
+</html>
