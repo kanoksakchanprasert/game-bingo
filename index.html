@@ -3,39 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rock Wedding Bingo 5x5</title>
+    <title>Rock Legends Bingo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600;800&family=Rock+Salt&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Rock+Salt&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Base Styles */
         body {
-            background-color: #0f0f0f; /* พื้นหลังเกือบดำ แต่ไม่ดำสนิท ลดแสงจ้า */
+            background-color: #0f0f0f;
             color: #ffffff;
             font-family: 'Kanit', sans-serif;
-            touch-action: manipulation; /* ป้องกันการ double-tap zoom บนมือถือ */
+            touch-action: manipulation;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 0, 128, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 255, 255, 0.08) 0%, transparent 40%);
-        }
-
-        /* Neon Glow Utility */
-        .neon-text-pink {
-            color: #ff0080;
-            text-shadow: 0 0 5px rgba(255, 0, 128, 0.5);
-        }
-        .neon-border {
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3), inset 0 0 5px rgba(0, 255, 255, 0.1);
-            border: 1px solid rgba(0, 255, 255, 0.5);
+                radial-gradient(circle at 10% 20%, rgba(220, 38, 38, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(79, 70, 229, 0.1) 0%, transparent 40%);
         }
 
         /* Bingo Grid Styles */
         .bingo-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            max-width: 600px; /* จำกัดความกว้างไม่ให้ใหญ่เกินไปบน Desktop */
+            gap: 5px;
+            max-width: 600px;
             margin: 0 auto;
             aspect-ratio: 1 / 1;
         }
@@ -43,7 +33,7 @@
         .bingo-cell {
             background: #1a1a1a;
             border: 1px solid #333;
-            border-radius: 8px;
+            border-radius: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -57,85 +47,78 @@
             user-select: none;
         }
 
-        /* Text Adjustments for Legibility */
+        /* Text Adjustments for Long Rock Names */
         .bingo-cell span {
-            font-size: 11px; /* Mobile size */
+            font-size: 9px; /* เล็กหน่อยเพื่อให้ชื่อยาวๆ อย่าง Red Hot Chili Peppers พอดี */
             font-weight: 300;
-            line-height: 1.2;
+            line-height: 1.1;
             z-index: 10;
+            word-break: break-word;
+            padding: 0 2px;
         }
         
         .bingo-cell i {
-            font-size: 16px;
-            margin-bottom: 4px;
-            color: #555; /* ไอคอนสีจาง เพื่อไม่แย่งสายตาตัวหนังสือ */
+            font-size: 14px;
+            margin-bottom: 2px;
+            color: #666;
             transition: color 0.2s;
         }
 
-        /* Hover State (Desktop) */
         @media (hover: hover) {
             .bingo-cell:hover {
-                border-color: #00ffff;
+                border-color: #ef4444;
                 background: #252525;
             }
         }
 
-        /* Active/Selected State - High Contrast */
+        /* Active State */
         .bingo-cell.active {
-            background: #ff0080; /* สีชมพูสด */
-            border-color: #ff0080;
-            color: #ffffff; /* ตัวหนังสือขาวบนพื้นชมพู อ่านง่าย */
-            transform: scale(0.95);
-            box-shadow: 0 0 15px rgba(255, 0, 128, 0.6);
+            background: #dc2626; /* Red-600 */
+            border-color: #dc2626;
+            color: #ffffff;
+            transform: scale(0.96);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
         }
         
         .bingo-cell.active i {
-            color: rgba(255,255,255, 0.8);
+            color: rgba(255,255,255, 0.9);
         }
 
-        /* Free Space Styling */
+        /* Free Space */
         .bingo-cell.free-space {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-            border: 1px solid #00ffff;
-            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f0f0f 100%);
+            border: 1px solid #6366f1;
+            box-shadow: inset 0 0 10px rgba(99, 102, 241, 0.3);
         }
         .bingo-cell.free-space span {
             font-weight: 800;
-            color: #00ffff;
-            font-size: 10px;
+            color: #6366f1;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
         .bingo-cell.free-space i {
-            color: #00ffff;
-            font-size: 20px;
+            color: #6366f1;
+            font-size: 18px;
         }
 
-        /* Responsive Text Sizing */
         @media (min-width: 400px) {
             .bingo-grid { gap: 8px; }
-            .bingo-cell span { font-size: 12px; }
-            .bingo-cell i { font-size: 20px; }
+            .bingo-cell span { font-size: 10px; }
+            .bingo-cell i { font-size: 18px; }
         }
         
         @media (min-width: 600px) {
             .bingo-grid { gap: 10px; }
             .bingo-cell { border-radius: 12px; }
-            .bingo-cell span { font-size: 16px; font-weight: 400; }
-            .bingo-cell i { font-size: 24px; margin-bottom: 8px; }
-            .bingo-cell.free-space span { font-size: 14px; }
-            .bingo-cell.free-space i { font-size: 32px; }
+            .bingo-cell span { font-size: 13px; font-weight: 400; }
+            .bingo-cell i { font-size: 24px; margin-bottom: 6px; }
+            .bingo-cell.free-space span { font-size: 12px; }
+            .bingo-cell.free-space i { font-size: 28px; }
         }
 
-        /* Header Fonts */
-        .rock-font {
-            font-family: 'Rock Salt', cursive;
-        }
-
-        /* Modal Overlay */
         .modal {
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(8px);
         }
     </style>
 </head>
@@ -144,96 +127,104 @@
     <!-- Header -->
     <header class="p-4 text-center relative z-10">
         <h1 class="text-3xl md:text-5xl font-extrabold tracking-tighter text-white mb-1 drop-shadow-lg">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">ROCK</span> BINGO
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-indigo-500">ROCK</span> LEGENDS
         </h1>
+        <p class="text-gray-500 text-xs tracking-widest uppercase">The Greatest Hits Bingo</p>
     </header>
 
     <!-- Main Game Area -->
     <main class="flex-grow flex flex-col items-center justify-center p-4 w-full">
-        
-        <!-- Bingo Card Container -->
         <div class="w-full max-w-2xl bg-gray-900/50 p-2 md:p-6 rounded-2xl border border-gray-800 backdrop-blur-sm shadow-2xl relative">
-            
-            <!-- Decor Elements -->
-            <div class="absolute -top-3 -left-3 text-cyan-400 text-2xl opacity-50"><i class="fa-solid fa-bolt"></i></div>
-            <div class="absolute -bottom-3 -right-3 text-pink-500 text-2xl opacity-50"><i class="fa-solid fa-music"></i></div>
-
-            <!-- The Grid -->
-            <div class="bingo-grid" id="bingoGrid">
-                <!-- Cells will be generated by JS -->
-            </div>
-
+            <div class="bingo-grid" id="bingoGrid"></div>
         </div>
 
-        <!-- Controls -->
         <div class="mt-8 flex gap-4">
-            <button onclick="showResetModal()" class="px-6 py-2 rounded-full border border-gray-600 text-gray-300 hover:border-pink-500 hover:text-pink-500 transition text-sm font-semibold uppercase tracking-wider">
+            <button onclick="showResetModal()" class="px-6 py-2 rounded-full border border-gray-600 text-gray-300 hover:border-red-500 hover:text-red-500 transition text-sm font-semibold uppercase tracking-wider">
                 <i class="fa-solid fa-rotate-right mr-2"></i> Reset
             </button>
-            <!-- Auto bingo, button removed -->
         </div>
-
     </main>
 
-    <!-- Footer -->
     <footer class="p-4 text-center text-gray-600 text-xs">
-        Tap a cell to mark it. Get 5 in a row to win!
+        Tap to mark. Get 5 in a row to win!
     </footer>
 
     <!-- Winner Modal -->
     <div id="winnerModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-900 border-2 border-pink-500 rounded-2xl p-8 max-w-sm w-full text-center relative overflow-hidden shadow-[0_0_50px_rgba(255,0,128,0.4)]">
-            <div class="absolute inset-0 bg-gradient-to-b from-pink-500/10 to-transparent pointer-events-none"></div>
-            
-            <i class="fa-solid fa-hand-horns text-6xl text-pink-500 mb-4 animate-bounce"></i>
+        <div class="bg-gray-900 border-2 border-red-500 rounded-2xl p-8 max-w-sm w-full text-center relative overflow-hidden shadow-[0_0_50px_rgba(220,38,38,0.4)]">
+            <div class="absolute inset-0 bg-gradient-to-b from-red-500/10 to-transparent pointer-events-none"></div>
+            <i class="fa-solid fa-hand-horns text-6xl text-red-500 mb-4 animate-bounce"></i>
             <h2 class="text-4xl font-black text-white italic mb-2">YOU ROCK!</h2>
-            <p class="text-gray-300 mb-6">Bingo Complete! ไปรับของรางวัลหน้าเวทีได้เลย!</p>
-            
-            <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-white text-black font-bold hover:bg-gray-200 transition">
-                YEAH! 🤘
-            </button>
+            <p class="text-gray-300 mb-6">Bingo Complete! สุดยอดชาวร็อก!</p>
+            <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-white text-black font-bold hover:bg-gray-200 transition">YEAH! 🤘</button>
         </div>
     </div>
 
-    <!-- Reset Confirmation Modal (New) -->
+    <!-- Reset Confirmation Modal -->
     <div id="resetModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl relative">
-            <h3 class="text-xl font-bold text-white mb-2 font-['Rock_Salt'] text-pink-500">NEW GAME?</h3>
-            <p class="text-gray-400 text-sm mb-6">เริ่มกระดานใหม่ (กระดานเดิมจะหายไป)</p>
+        <div class="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl">
+            <h3 class="text-xl font-bold text-white mb-2 font-['Rock_Salt'] text-red-500">NEW GIG?</h3>
+            <p class="text-gray-400 text-sm mb-6">เริ่มกระดานใหม่ (ล้างข้อมูลเก่า)</p>
             <div class="flex gap-3 justify-center">
                 <button onclick="closeResetModal()" class="px-4 py-2 rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800 text-sm transition">Cancel</button>
-                <button onclick="confirmReset()" class="px-4 py-2 rounded-lg bg-pink-600 text-white font-bold hover:bg-pink-700 text-sm transition">Start New</button>
+                <button onclick="confirmReset()" class="px-4 py-2 rounded-lg bg-red-600 text-white font-bold hover:bg-red-700 text-sm transition">Start New</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Sample Words (Rock + Wedding Theme)
+        // 50 Rock Legends List
         const fullWordPool = [
-            { text: "Air Guitar", icon: "fa-guitar" }, // โซโล่ทิพย์
-            { text: "โยกหัว (Headbang)", icon: "fa-music" },
-            { text: "ว้าก!!! (Scream)", icon: "fa-bullhorn" },
-            { text: "รัวกลอง (Drum Roll)", icon: "fa-drum" },
-            { text: "กระโดด! (Jump)", icon: "fa-person-falling" },
-            { text: "ชูมือขวา 🤘", icon: "fa-hand-horns" },
-            { text: "เสื้อดำ (All Black)", icon: "fa-user-secret" },
-            { text: "ใส่แว่นดำ", icon: "fa-glasses" },
-            { text: "เปิดแฟลชมือถือ", icon: "fa-mobile-screen" },
-            { text: "เอาอีกๆ (Encore)", icon: "fa-rotate-right" },
-            { text: "เสื้อวง (Band Tee)", icon: "fa-shirt" },
-            { text: "ร้องเพี้ยน", icon: "fa-face-dizzy" },
-            { text: "ลืมเนื้อร้อง", icon: "fa-question" },
-            { text: "เดินเบส (Bass Line)", icon: "fa-wave-square" },
-            { text: "ไมค์หอน (Feedback)", icon: "fa-microphone-slash" },
-            { text: "ขอลายเซ็น", icon: "fa-pen-nib" },
-            { text: "โชว์รอยสัก", icon: "fa-dragon" },
-            { text: "คนผมยาว", icon: "fa-user" },
-            { text: "ควงไม้กลอง", icon: "fa-drumstick-bite" }, // ใช้ icon ใกล้เคียง
-            { text: "นักร้องนำ", icon: "fa-microphone" },
-            { text: "โซโล่เบส", icon: "fa-bolt" },
-            { text: "คอแห้ง (Thirsty)", icon: "fa-glass-water" },
-            { text: "ถ่ายคลิป", icon: "fa-video" },
-            { text: "เซลฟี่หน้าเวที", icon: "fa-camera" }
+            { text: "Elvis Presley", icon: "fa-music" },
+            { text: "The Beatles", icon: "fa-users" },
+            { text: "The Rolling Stones", icon: "fa-gem" },
+            { text: "Pink Floyd", icon: "fa-eye" },
+            { text: "Queen", icon: "fa-crown" },
+            { text: "Red Hot Chili Peppers", icon: "fa-pepper-hot" },
+            { text: "David Bowie", icon: "fa-bolt" },
+            { text: "Bob Dylan", icon: "fa-guitar" },
+            { text: "Freddie Mercury", icon: "fa-microphone" },
+            { text: "Linkin Park", icon: "fa-link" },
+            { text: "ไมโคร", icon: "fa-hand-back-fist" },
+            { text: "หิน เหล็ก ไฟ", icon: "fa-fire" },
+            { text: "Bodyslam", icon: "fa-person-falling" },
+            { text: "Loso", icon: "fa-heart" },
+            { text: "Y not 7", icon: "fa-7" },
+            { text: "Silly Fools", icon: "fa-mask" },
+            { text: "Big Ass", icon: "fa-drum" },
+            { text: "Clash", icon: "fa-hand-fist" },
+            { text: "Fly", icon: "fa-paper-plane" },
+            { text: "Blackhead", icon: "fa-user-secret" },
+            { text: "ไฮดร้า", icon: "fa-dragon" },
+            { text: "แท็กซี่", icon: "fa-taxi" },
+            { text: "Retrospect", icon: "fa-skull" },
+            { text: "สไมล์บัฟฟาโล่", icon: "fa-face-smile" },
+            { text: "Slot Machine", icon: "fa-hand-spock" },
+            { text: "Potato", icon: "fa-circle" }, 
+            { text: "Cocktail", icon: "fa-martini-glass" },
+            { text: "ไททศมิตร", icon: "fa-hand-rock" },
+            { text: "Sweet Mullet", icon: "fa-candy-cane" },
+            { text: "Little John", icon: "fa-user-ninja" },
+            { text: "ทรีแมนดาวน์", icon: "fa-cloud-rain" },
+            { text: "Klear", icon: "fa-droplet" },
+            { text: "Tilly Birds", icon: "fa-crow" },
+            { text: "Jimi Hendrix", icon: "fa-guitar" },
+            { text: "Bruce Springsteen", icon: "fa-flag-usa" },
+            { text: "U2", icon: "fa-glasses" },
+            { text: "Metallica", icon: "fa-bolt" },
+            { text: "Nirvana", icon: "fa-face-dizzy" },
+            { text: "AC/DC", icon: "fa-bolt-lightning" },
+            { text: "Guns N' Roses", icon: "fa-bomb" },
+            { text: "Pearl Jam", icon: "fa-circle-dot" },
+            { text: "Bon Jovi", icon: "fa-heart-pulse" },
+            { text: "Oasis", icon: "fa-water" },
+            { text: "Blondie", icon: "fa-venus" },
+            { text: "Eagles", icon: "fa-feather" },
+            { text: "Aerosmith", icon: "fa-plane-departure" },
+            { text: "R.E.M.", icon: "fa-bed" },
+            { text: "Coldplay", icon: "fa-snowflake" },
+            { text: "KISS", icon: "fa-mask" },
+            { text: "The Police", icon: "fa-shield-halved" }
         ];
 
         let grid = [];
@@ -251,13 +242,11 @@
         function initGame() {
             const gridEl = document.getElementById('bingoGrid');
             gridEl.innerHTML = '';
-            grid = []; // Reset grid storage
+            grid = []; 
             
-            // Shuffle and pick 24 words
             const shuffled = [...fullWordPool].sort(() => 0.5 - Math.random());
             const selectedWords = shuffled.slice(0, 24);
             
-            // Insert Free Space at index 12 (Center of 5x5)
             selectedWords.splice(12, 0, { text: "FREE SPACE", icon: "fa-hand-peace", isFree: true });
 
             selectedWords.forEach((item, index) => {
@@ -274,20 +263,16 @@
                 cell.appendChild(icon);
                 cell.appendChild(text);
                 
-                // Store in our grid array and append to DOM
                 grid.push(cell);
                 gridEl.appendChild(cell);
             });
         }
 
         function toggleCell(cell) {
-            if (cell.classList.contains('free-space')) return; // Free space always active
+            if (cell.classList.contains('free-space')) return; 
             cell.classList.toggle('active');
             
-            // Add a little vibration for mobile feel
             if (navigator.vibrate) navigator.vibrate(50);
-
-            // Auto-check for Bingo
             checkBingoAuto();
         }
 
@@ -297,7 +282,6 @@
             });
 
             if (isBingo) {
-                // If modal is not already showing, show it
                 if(document.getElementById('winnerModal').classList.contains('hidden')) {
                     document.getElementById('winnerModal').classList.remove('hidden');
                 }
@@ -307,8 +291,6 @@
         function closeModal() {
             document.getElementById('winnerModal').classList.add('hidden');
         }
-
-        // --- NEW RESET LOGIC ---
 
         function showResetModal() {
             document.getElementById('resetModal').classList.remove('hidden');
@@ -321,12 +303,10 @@
         function confirmReset() {
             initGame();
             closeResetModal();
-            closeModal(); // Close winner modal if it's open
+            closeModal();
         }
 
-        // Start
         initGame();
-
     </script>
 </body>
 </html>
