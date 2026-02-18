@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rock Legends Bingo</title>
+    <title>Rock Artists Bingo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Rock+Salt&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -47,9 +47,9 @@
             user-select: none;
         }
 
-        /* Text Adjustments for Long Rock Names */
+        /* Text Adjustments */
         .bingo-cell span {
-            font-size: 9px; /* เล็กหน่อยเพื่อให้ชื่อยาวๆ อย่าง Red Hot Chili Peppers พอดี */
+            font-size: 9px;
             font-weight: 300;
             line-height: 1.1;
             z-index: 10;
@@ -127,7 +127,7 @@
     <!-- Header -->
     <header class="p-4 text-center relative z-10">
         <h1 class="text-3xl md:text-5xl font-extrabold tracking-tighter text-white mb-1 drop-shadow-lg">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-indigo-500">ROCK</span> LEGENDS
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-indigo-500">ROCK</span> ARTISTS
         </h1>
         <p class="text-gray-500 text-xs tracking-widest uppercase">The Greatest Hits Bingo</p>
     </header>
@@ -173,58 +173,58 @@
     </div>
 
     <script>
-        // 50 Rock Legends List
+        // 50 Rock Artists List (New Set)
         const fullWordPool = [
             { text: "Elvis Presley", icon: "fa-music" },
             { text: "The Beatles", icon: "fa-users" },
             { text: "The Rolling Stones", icon: "fa-gem" },
             { text: "Pink Floyd", icon: "fa-eye" },
             { text: "Queen", icon: "fa-crown" },
-            { text: "Red Hot Chili Peppers", icon: "fa-pepper-hot" },
-            { text: "David Bowie", icon: "fa-bolt" },
-            { text: "Bob Dylan", icon: "fa-guitar" },
-            { text: "Freddie Mercury", icon: "fa-microphone" },
+            { text: "Ebola", icon: "fa-biohazard" },
+            { text: "อัสนี-วสันต์", icon: "fa-guitar" },
+            { text: "หรั่ง ร็อคเคสตร้า", icon: "fa-microphone-lines" },
+            { text: "ดิ โอฬาร โปรเจ็ค", icon: "fa-fire-flame-curved" },
             { text: "Linkin Park", icon: "fa-link" },
             { text: "ไมโคร", icon: "fa-hand-back-fist" },
             { text: "หิน เหล็ก ไฟ", icon: "fa-fire" },
             { text: "Bodyslam", icon: "fa-person-falling" },
             { text: "Loso", icon: "fa-heart" },
             { text: "Y not 7", icon: "fa-7" },
-            { text: "Silly Fools", icon: "fa-mask" },
-            { text: "Big Ass", icon: "fa-drum" },
-            { text: "Clash", icon: "fa-hand-fist" },
-            { text: "Fly", icon: "fa-paper-plane" },
+            { text: "โต Silly Fools", icon: "fa-mask" },
+            { text: "เจ๋ง Big Ass", icon: "fa-drum" },
+            { text: "แบงค์ วง Clash", icon: "fa-hand-fist" },
+            { text: "อี๊ด วง Fly", icon: "fa-paper-plane" },
             { text: "Blackhead", icon: "fa-user-secret" },
-            { text: "ไฮดร้า", icon: "fa-dragon" },
+            { text: "ป้าง นครินทร์", icon: "fa-hat-cowboy" },
             { text: "แท็กซี่", icon: "fa-taxi" },
             { text: "Retrospect", icon: "fa-skull" },
             { text: "สไมล์บัฟฟาโล่", icon: "fa-face-smile" },
             { text: "Slot Machine", icon: "fa-hand-spock" },
-            { text: "Potato", icon: "fa-circle" }, 
-            { text: "Cocktail", icon: "fa-martini-glass" },
+            { text: "ปั๊บ Potato", icon: "fa-circle" },
+            { text: "กะลา", icon: "fa-hands-praying" },
             { text: "ไททศมิตร", icon: "fa-hand-rock" },
             { text: "Sweet Mullet", icon: "fa-candy-cane" },
-            { text: "Little John", icon: "fa-user-ninja" },
+            { text: "ค็อกเทล", icon: "fa-martini-glass" },
             { text: "ทรีแมนดาวน์", icon: "fa-cloud-rain" },
-            { text: "Klear", icon: "fa-droplet" },
-            { text: "Tilly Birds", icon: "fa-crow" },
-            { text: "Jimi Hendrix", icon: "fa-guitar" },
-            { text: "Bruce Springsteen", icon: "fa-flag-usa" },
+            { text: "แพท Klear", icon: "fa-droplet" },
+            { text: "เป้ ไฮร็อค", icon: "fa-volume-high" },
+            { text: "แหวน ฐิติมา", icon: "fa-ring" },
+            { text: "แมว จิระศักดิ์", icon: "fa-cat" },
             { text: "U2", icon: "fa-glasses" },
             { text: "Metallica", icon: "fa-bolt" },
-            { text: "Nirvana", icon: "fa-face-dizzy" },
-            { text: "AC/DC", icon: "fa-bolt-lightning" },
+            { text: "ปุ๊ อัญชลี", icon: "fa-star" },
+            { text: "บางแก้ว", icon: "fa-dog" },
             { text: "Guns N' Roses", icon: "fa-bomb" },
-            { text: "Pearl Jam", icon: "fa-circle-dot" },
+            { text: "ใหม่ เจริญปุระ", icon: "fa-water" },
             { text: "Bon Jovi", icon: "fa-heart-pulse" },
-            { text: "Oasis", icon: "fa-water" },
-            { text: "Blondie", icon: "fa-venus" },
-            { text: "Eagles", icon: "fa-feather" },
-            { text: "Aerosmith", icon: "fa-plane-departure" },
-            { text: "R.E.M.", icon: "fa-bed" },
-            { text: "Coldplay", icon: "fa-snowflake" },
+            { text: "Oasis", icon: "fa-tree" },
+            { text: "บูโดกัน", icon: "fa-user-group" },
+            { text: "อินคา", icon: "fa-mountain-sun" },
+            { text: "ไอน้ำ", icon: "fa-cloud" },
+            { text: "โมเดิร์นด็อก", icon: "fa-dog" },
+            { text: "แหลม เมอริสัน", icon: "fa-guitar" },
             { text: "KISS", icon: "fa-mask" },
-            { text: "The Police", icon: "fa-shield-halved" }
+            { text: "Paradox", icon: "fa-hat-wizard" }
         ];
 
         let grid = [];
